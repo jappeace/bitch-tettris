@@ -16,9 +16,9 @@ pub const COL_COUNT: u8 = 10;
 pub const ROW_COUNT: u8 = 22;
 
 /// The number of tetromino's
-pub const SHAPE_COUNT: u8 = 7;
+pub const SHAPE_COUNT: u8 = 8;
 /// The number of points in each tetromino
-pub const POINT_COUNT: u8 = 4;
+pub const POINT_COUNT: u8 = 5;
 
 /// The number of rows the player must complete before going to a new level
 pub const ROWS_PER_LEVEL: u8 = 10;
@@ -30,51 +30,53 @@ pub const ROWS_PER_LEVEL: u8 = 10;
 pub const SHAPES: [[Point; POINT_COUNT as usize]; SHAPE_COUNT as usize] = [
 
         /*
+                      0,-1 1,1
+                 -1,0 0, 0 1,0 
+        */
+        [Point { x: 1, y: 1 },Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: 0, y: -1 }, Point { x: 1, y: 0 }],
+
+        /*
                       0,-1
                  -1,0 0, 0 1,0
         */
-        [Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: 0, y: -1 }, Point { x: 1, y: 0 }],
+        [Point { x: -2, y: 0 }, Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: 0, y: -1 }, Point { x: 1, y: 0 }],
 
         // see also SQUARE_SHAPE_INDEX const below
         /*
             -1,-1 0,-1
             -1, 0 0, 0
         */
-        [Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -1, y: -1 }, Point { x: 0, y: -1 } ],
+        [Point { x: -2, y: 0 },Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -1, y: -1 }, Point { x: 0, y: -1 } ],
 
         /*
                -1,-1 0,-1
                      0, 0 1,0
         */
-        [Point { x: 0, y: 0 }, Point { x: 0, y: -1 }, Point { x: -1, y: -1 }, Point { x: 1, y: 0 } ],
+        [Point { x: -2, y: 0 },Point { x: 0, y: 0 }, Point { x: 0, y: -1 }, Point { x: -1, y: -1 }, Point { x: 1, y: 0 } ],
 
         /*
                   0,-1 1,-1
              -1,0 0, 0
         */
-        [Point { x: 0, y: 0 }, Point { x: 0, y: -1 }, Point { x: 1, y: -1 }, Point { x: -1, y: 0 } ],
+        [Point { x: -2, y: 0 },Point { x: 0, y: 0 }, Point { x: 0, y: -1 }, Point { x: 1, y: -1 }, Point { x: -1, y: 0 } ],
 
         /*
                       1,-1  
              -1,0 0,0 1, 0
         */
-        [Point { x: 0, y: 0 }, Point { x: 1, y: 0 }, Point { x: 1, y: -1 }, Point { x: -1, y: 0 } ],
+        [Point { x: -2, y: 0 },Point { x: 0, y: 0 }, Point { x: 1, y: 0 }, Point { x: 1, y: -1 }, Point { x: -1, y: 0 } ],
 
         /*
              -1,-1  
              -1, 0 0,0 1,0
         */
-        [Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -1, y: -1 }, Point { x: 1, y: 0 } ],
+        [Point { x: -2, y: 0 },Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -1, y: -1 }, Point { x: 1, y: 0 } ],
 
         /*
             -2,0, -1,0, 0,0, 1,0
         */
-        [Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -2, y: 0 }, Point { x: 1, y: 0 } ]
+        [Point { x: -3, y: 0 },Point { x: 0, y: 0 }, Point { x: -1, y: 0 }, Point { x: -2, y: 0 }, Point { x: 1, y: 0 } ]
     ];
-
-/// The square shape is special because it doesn't need to be rotated when the player
-/// presses the rotate key
-pub const SQUARE_SHAPE_INDEX: i32 = 1;
 
 /// The tetris game board consists of a two-dimensional array of GridCell's. Each GridCell struct
 /// contains an enum, GridCellType to indicate the type of cell
@@ -263,9 +265,7 @@ impl Tetris {
             // rotate a copy of the current shape
             let mut shape = self.shape;
             // there is no need to rotate the square shape as it is symmetrical
-            if self.shape_index != SQUARE_SHAPE_INDEX {
-                self.rotate_shape(clockwise, &mut shape);
-            }
+            self.rotate_shape(clockwise, &mut shape);
             // if this new shape is in a valid position (not checking sides because we can wall kick)...
             let mut result: bool = self.valid_location(shape, self.col, self.row, false);
             if result {
@@ -566,37 +566,33 @@ impl Tetris {
     /// otherwise -1 is returned
     fn wall_kick(&mut self, shape: [Point; POINT_COUNT as usize]) -> i32 {
         // square piece doesn't rotate, so no need to wall kick
-        if self.shape_index != SQUARE_SHAPE_INDEX {
-            let mut result: i32 = -1;
-            // if on left side of the board, then kick to right, e.g. +1, else -1
-            let increment = if self.col < COL_COUNT as i32 / 2 {
-                1
-            } else {
-                -1
-            };
-            for point in shape.iter() {
-                let mut kick_col: i32 = self.col;
-                // loop until we've shifted kick_col in bounds for this point's x value
-                // after loop, kick_col will be in bounds but not necessarily in valid location
-                loop {
-                    let grid_x = kick_col + point.x as i32;
-                    // if not in bounds, then kick left/right
-                    if grid_x < 0 || grid_x >= COL_COUNT as i32 {
-                        kick_col += increment;
-                    } else {
-                        break;
-                    }
-                }
-                // ensure kick_col is a valid location
-                // e.g. we may have kicked into a place where there are Fixed cells
-                if self.valid_location(shape, kick_col, self.row, true) {
-                    result = kick_col;
+        let mut result: i32 = -1;
+        // if on left side of the board, then kick to right, e.g. +1, else -1
+        let increment = if self.col < COL_COUNT as i32 / 2 {
+            1
+        } else {
+            -1
+        };
+        for point in shape.iter() {
+            let mut kick_col: i32 = self.col;
+            // loop until we've shifted kick_col in bounds for this point's x value
+            // after loop, kick_col will be in bounds but not necessarily in valid location
+            loop {
+                let grid_x = kick_col + point.x as i32;
+                // if not in bounds, then kick left/right
+                if grid_x < 0 || grid_x >= COL_COUNT as i32 {
+                    kick_col += increment;
+                } else {
                     break;
                 }
             }
-            result
-        } else {
-            self.col
+            // ensure kick_col is a valid location
+            // e.g. we may have kicked into a place where there are Fixed cells
+            if self.valid_location(shape, kick_col, self.row, true) {
+                result = kick_col;
+                break;
+            }
         }
+        result
     }
 }

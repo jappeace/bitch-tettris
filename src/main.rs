@@ -25,10 +25,10 @@ struct App {
     cache: GlyphCache<'static>,
 }
 
-//const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 const LIGHT_GRAY: [f32; 4] = [0.3, 0.3, 0.3, 1.0];
-const DARK_GRAY: [f32; 4] = [0.1, 0.1, 0.1, 1.0];
+const DARK_GRAY: [f32; 4] = [0.62, 0.12, 0.94, 1.0];
 const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
 const CYAN: [f32; 4] = [0.0, 1.0, 1.0, 1.0];
 const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
@@ -47,7 +47,7 @@ fn get_shape_color(shape_index: i32) -> [f32; 4] {
         5 => BLUE,
         6 => CYAN,
         _ => {
-            BLACK
+            WHITE
         }
     }
 }
@@ -197,21 +197,21 @@ impl App {
 
     fn handle_key_input(&mut self, key: keyboard::Key) {
         match key {
-            Key::Left => { 
+            Key::H=> { 
                 let col: i32 = self.tetris.get_col();
                 self.tetris.set_col(col - 1);
             },
 
-            Key::Right => { 
+            Key::L=> { 
                 let col: i32 = self.tetris.get_col();
                 self.tetris.set_col(col + 1);
             },
 
-            Key::Up => { 
+            Key::K=> { 
                 self.tetris.rotate(true);
             },
 
-            Key::Down => { 
+            Key::J=> { 
                 let row: i32 = self.tetris.get_row() + 1;
                 self.tetris.set_row(row);
             },
@@ -230,14 +230,14 @@ impl App {
                 self.tetris.start_game();
             },
 
-            Key::K => { 
+            Key::Up => { 
                 if self.tetris.get_starting_level() > 0 {
                     let new_level: u32 = self.tetris.get_starting_level() - 1;
                     self.tetris.set_starting_level(new_level); 
                 }
             },
 
-            Key::L => { 
+            Key::Down => { 
                 if self.tetris.get_starting_level() < 30 {
                     let new_level: u32 = self.tetris.get_starting_level() + 1;
                     self.tetris.set_starting_level(new_level); 
