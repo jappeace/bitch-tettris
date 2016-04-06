@@ -1,14 +1,14 @@
-# tetris-piston
-A tetris game written in Rust using the Piston library
+# Bitch Tetris
 
-### Binaries
-
-* For windows [download](bin/tetris-piston-version-3a529c0.zip?raw=true)
-* For Linux [download](bin/tetris-piston-version-6119499.tar.gz?raw=true)
+This is a fork of [tetris-piston](http://github.com/dunnker/tetris-piston).
+I didn't use github for this because the guy decided to commit binaries,
+which is an *increadibly* bad idea.
 
 ### About this game
 
-I know the world doesn't need another Tetris clone, however this is a good learning project for me because I've implemented this game in several other languages (Delphi, C#, C++), so it's mostly a matter of translation. But it's also an opportunity to compare Rust to these other languages.
+I wanted to learn Rust and make also make some infuriating gameplay.
+I also don't know any opengl so I just stole this guys work. The license
+sais I'm allowed. Such a nice guy.
 
 The game has the following features:
 
@@ -17,6 +17,7 @@ The game has the following features:
 * Can preview the next tetromino to appear on the board
 * Ghost tetromino lets you know where the current tetromino will be dropped
 * Wall kick feature automatically shifts the current tetromino to the left or right when rotating next to the side walls
+* *NEW*: Infuriating gameplay
 
 ![Screenshot](Screenshot.png?raw=true "Screenshot")
 
