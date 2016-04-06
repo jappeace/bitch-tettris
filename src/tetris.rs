@@ -151,6 +151,7 @@ pub struct Tetris {
     rows_completed: u32,
     /// Random number generator
     rng: rand::ThreadRng,
+    pub hasplayed:bool,
 }
 
 impl Tetris {
@@ -172,6 +173,7 @@ impl Tetris {
             rows_completed: 0,
             rows_completed_level: 0,
             rng: rand::thread_rng(),
+            hasplayed:false,
         }
     }
 
@@ -289,8 +291,10 @@ impl Tetris {
         }
     }
 
+
     /// Starts a new game by clearing the game board, and resetting the level, score etc.
     pub fn start_game(&mut self) {
+        self.hasplayed = true;
         if self.game_over {
             self.game_over = false;
             self.level = self.starting_level;

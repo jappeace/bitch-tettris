@@ -90,8 +90,15 @@ impl Render {
         let mut result: graphics::context::Context = transform;
         let mut text = graphics::Text::new(TEXT_FONT_SIZE);
         text.color = ORANGE;
-        text.draw(&"GAME OVER", cache, &c.draw_state, result.transform, gl);
-        result = result.trans(0f64, LINE_HEIGHT);
+        if tetris.hasplayed {
+            text.draw(&"GAME OVER, You lost!", cache, &c.draw_state, result.transform, gl);
+            result = result.trans(0f64, LINE_HEIGHT);
+        }else{
+            text.draw(&"WELCOME WELCOME, have a seat, ", cache, &c.draw_state, result.transform, gl);
+            result = result.trans(0f64, LINE_HEIGHT);
+            text.draw("There are no spider crawling out of your eyes!", cache, &c.draw_state, result.transform, gl);
+            result = result.trans(0f64, LINE_HEIGHT);
+        }
 
         text.draw(&"Press 'N' for a new game", cache, &c.draw_state, result.transform, gl);
         result = result.trans(0f64, LINE_HEIGHT);
