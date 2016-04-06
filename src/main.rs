@@ -96,15 +96,15 @@ impl Render {
         text.draw(&"Press 'N' for a new game", cache, &c.draw_state, result.transform, gl);
         result = result.trans(0f64, LINE_HEIGHT);
 
-        text.draw(&"Use arrow keys to move and rotate", cache, &c.draw_state, 
-            result.transform, gl);
-        result = result.trans(0f64, LINE_HEIGHT);
-        
-        text.draw(&"Press spacebar to drop", cache, &c.draw_state, 
+        text.draw(&"Use arrow hjkl to move and rotate", cache, &c.draw_state, 
             result.transform, gl);
         result = result.trans(0f64, LINE_HEIGHT);
 
-        text.draw(&format!("Press 'K' to decrease starting level ({})", tetris.get_starting_level()), 
+        text.draw(&"Press g to drop", cache, &c.draw_state, 
+            result.transform, gl);
+        result = result.trans(0f64, LINE_HEIGHT);
+
+        text.draw(&format!("Press 'Down' to decrease starting level ({})", tetris.get_starting_level()), 
             cache, &c.draw_state, result.transform, gl);
         result = result.trans(0f64, LINE_HEIGHT);
 
@@ -216,7 +216,7 @@ impl App {
                 self.tetris.set_row(row);
             },
 
-            Key::Space => { 
+            Key::G => { 
                 let mut row: i32 = self.tetris.get_row() + 1;
                 while self.tetris.set_row(row) {
                     row += 1;

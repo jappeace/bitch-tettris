@@ -18,6 +18,7 @@ The game has the following features:
 * Ghost tetromino lets you know where the current tetromino will be dropped
 * Wall kick feature automatically shifts the current tetromino to the left or right when rotating next to the side walls
 * *NEW*: Infuriating gameplay
+* *NEW*: Proper navigation
 
 ![Screenshot](Screenshot.png?raw=true "Screenshot")
 
